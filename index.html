@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 🌹</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe4e1;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        /* The "Click to Enter" Screen - Fixes Audio Blocking */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 228, 225, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            cursor: pointer;
+            color: #ff4d6d;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            width: 350px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .gif-container { height: 200px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+        img { max-width: 100%; max-height: 100%; border-radius: 15px; }
+        h1 { color: #ff4d6d; font-size: 1.8rem; margin-bottom: 2rem; }
+
+        .buttons { display: flex; justify-content: center; align-items: center; gap: 20px; height: 100px; }
+
+        button {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        #yesBtn { background-color: #ff4d6d; color: white; z-index: 100; }
+        #noBtn { background-color: #adb5bd; color: white; z-index: 99; position: relative; }
+
+        #youtube-player { position: absolute; top: -9999px; left: -9999px; }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="enterSite()">
+        <div>
+            <p>You have a special message... ❤️</p>
+            <p style="font-size: 1rem;">(Click to open)</p>
+        </div>
+    </div>
+
+    <div id="youtube-player"></div>
+
+    <div class="container">
+        <div class="gif-container">
+            <img id="mainGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW5lenR5eGtueWt4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute heart">
+        </div>
+        
+        <h1 id="question">Kunjaveee Will you be my Valentine? 🌹</h1>
+        
+        <div class="buttons">
+            <button id="yesBtn">Yes!</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <script>
+        // YouTube API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        var playerReady = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0', width: '0',
+                videoId: 'siGSwQF6d8g',
+                playerVars: { 
+                    'autoplay': 1, 
+                    'controls': 0, 
+                    'loop': 1, 
+                    'playlist': 'siGSwQF6d8g'
+                },
+                events: { 
+                    'onReady': (event) => { 
+                        playerReady = true; 
+                        event.target.setVolume(15); 
+                    } 
+                }
+            });
+        }
+
+        function enterSite() {
+            document.getElementById('overlay').style.display = 'none';
+            if (playerReady) {
+                player.playVideo();
+            }
+        }
+
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const mainGif = document.getElementById('mainGif');
+
+        let yesScale = 1;
+
+        noBtn.addEventListener('mouseover', () => {
+            noBtn.style.position = 'absolute';
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+            yesScale += 0.15;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        });
+
+        yesBtn.addEventListener('click', () => {
+            document.getElementById('question').innerText = "I knew itt.. Love you vavveee! ❤️";
+            mainGif.src = "https://media.giphy.com/media/W3fbjOoLVKHGYHlJ4z/giphy.gif";
+            noBtn.style.display = 'none';
+            yesBtn.style.transform = 'scale(1)';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        });
+    </script>
+</body>
+</html>
